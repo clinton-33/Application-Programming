@@ -2,24 +2,30 @@ package transactionsystem;
 
 import java.util.Calendar;
 
+/**
+ * Main class to demonstrate the functionality of the transaction system.
+ */
 public class Main {
     public static void main(String[] args) {
-        BankAccount account = new BankAccount(1000);
+        // Create a bank account
+        BankAccount account = new BankAccount("123456789", 500.00);
 
-        Calendar date = Calendar.getInstance();
-        DepositTransaction deposit = new DepositTransaction(500, date, "D001");
-        WithdrawalTransaction withdrawal = new WithdrawalTransaction(300, date, "W001");
-
+        // Test deposit transaction
+        DepositTransaction deposit = new DepositTransaction(200.00, Calendar.getInstance());
         deposit.apply(account);
-        withdrawal.apply(account);
-
         deposit.printTransactionDetails();
-        withdrawal.printTransactionDetails();
+        System.out.println("New balance: " + account.getBalance());
 
-        if (withdrawal.reverse(account)) {
-            System.out.println("Withdrawal reversed.");
-        }
+        // Test withdrawal transaction with insufficient funds
+        WithdrawalTransaction largeWithdrawal = new WithdrawalTransaction(1000.00, Calendar.getInstance());
+        System.out.println("Attempting large withdrawal:");
+        largeWithdrawal.apply(account);
 
-        System.out.println("Final Account Balance: " + account.getBalance());
+        // Test valid withdrawal transaction
+        WithdrawalTransaction smallWithdrawal = new WithdrawalTransaction(100.00, Calendar.getInstance());
+        System.out.println("Attempting small withdrawal:");
+        smallWithdrawal.apply(account);
+        smallWithdrawal.printTransactionDetails();
+        System.out.println("Balance after withdrawal: " + account.getBalance());
     }
 }
